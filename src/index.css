@@ -2,13 +2,3 @@
 @plugin "daisyui";
 
 
-
-
-/* small extra styles for nice look */
-:root{
---brand: #6d28d9;
-}
-
-
-/* tiny utility for rating stars */
-.star{ filter: drop-shadow(0 1px 0 rgba(0,0,0,0.06)); }
