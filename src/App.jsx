@@ -1,42 +1,37 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Profile from './pages/Profile';
-import FindPartners from './pages/FindPartners';
-import CreatePartnerProfile from './pages/CreatePartnerProfile';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import Profile from "./pages/Profile";
+import FindPartners from "./pages/FindPartners";
+import CreatePartnerProfile from "./pages/CreatePartnerProfile";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Layout includes persistent Header and Footer */}
-        <Route path="/" element={<Layout />}>
-          {/* Public Routes */}
-          <Route index element={<Home />} />
-          <Route path="find-partners" element={<FindPartners />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-          
-          {/* Protected Routes (Need to implement actual protection) */}
-          <Route path="profile" element={<Profile />} />
-          <Route path="create-partner-profile" element={<CreatePartnerProfile />} />
-          
-          {/* Dynamic Details Page (Placeholder) */}
-          <Route path="partner/:id" element={<div>Partner Details Page</div>} />
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="find-partners" element={<FindPartners />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="create-partner-profile" element={<CreatePartnerProfile />} />
+            <Route path="*" element={<div>404 - Page Not Found</div>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
 
-          {/* Catch-all route for 404 */}
-          <Route path="*" element={
-            <div className="text-center py-20">
-              <h1 className="text-4xl font-bold text-red-600">404 - Page Not Found</h1>
-              <p className="mt-4 text-gray-600">The page you are looking for does not exist.</p>
-            </div>
-          } />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+      {/* ToastContainer to show all toast notifications */}
+      <ToastContainer position="top-right" autoClose={3000} />
+    </>
   );
 }
 

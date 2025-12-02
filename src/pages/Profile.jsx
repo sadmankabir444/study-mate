@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../provider/AuthProvider';
 import { FaEnvelope, FaUserCircle } from 'react-icons/fa';
 
 const Profile = () => {
