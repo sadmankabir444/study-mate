@@ -9,9 +9,23 @@ import Profile from "./pages/Profile";
 import FindPartners from "./pages/FindPartners";
 import CreatePartnerProfile from "./pages/CreatePartnerProfile";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-
+import { useAuth } from "./provider/AuthProvider";
 
 function App() {
+  const { loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-linier-to-br from-indigo-50 to-indigo-100">
+        <div className="relative w-24 h-24 animate-fadeIn">
+          <div className="absolute inset-0 rounded-full bg-indigo-400 opacity-40 blur-xl animate-pulse"></div>
+          <div className="absolute inset-0 rounded-full border-8 border-indigo-600 border-t-transparent animate-spin"></div>
+          <div className="absolute inset-6 rounded-full bg-indigo-200 opacity-60"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <BrowserRouter>
@@ -28,8 +42,6 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-
-      {/* ToastContainer to show all toast notifications */}
       <ToastContainer position="top-right" autoClose={3000} />
     </>
   );

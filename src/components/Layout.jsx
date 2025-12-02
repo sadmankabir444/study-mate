@@ -8,7 +8,6 @@ const Layout = () => {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        {/* Outlet renders the current route component */}
         <Outlet />
       </main>
       <Footer />

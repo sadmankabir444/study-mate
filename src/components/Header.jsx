@@ -10,6 +10,20 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  // Fallback function for photoURL
+  // This checks if the photoURL is a truthy value (not null, not undefined) 
+  // AND if it is not an empty string. If not, it uses a placeholder.
+  const getProfileImage = () => {
+    // 🛑 Ekhane shomadhan: check kora hocche jeno "" empty string na thake.
+    if (user && user.photoURL && user.photoURL.length > 0) {
+      return user.photoURL;
+    }
+    // Placeholder image with the user's initial (if display name exists)
+    const initial = user?.displayName ? user.displayName[0].toUpperCase() : 'U';
+    // Using a dynamic placeholder based on user's initial 
+    return `https://placehold.co/150x150/007bff/ffffff?text=${initial}`;
+  };
+
   const handleLogout = async () => {
     setIsDropdownOpen(false);
     try {
@@ -86,8 +100,10 @@ const Header = () => {
                 >
                   <img
                     className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
-                    src={user.photoURL || 'https://via.placeholder.com/150'}
-                    alt={user.displayName}
+                    // 🛑 Fix 1: getProfileImage function call
+                    src={getProfileImage()} 
+                    alt={user.displayName || 'User'}
+                    title={user.displayName || 'User Profile'}
                   />
                   <IoMdArrowDropdown
                     className={`w-5 h-5 transition-transform duration-200 ${
@@ -191,10 +207,11 @@ const Header = () => {
                   <div className="flex items-center space-x-2 px-4 py-2 bg-blue-50 rounded-lg">
                     <img
                       className="w-8 h-8 rounded-full object-cover"
-                      src={user.photoURL || 'https://via.placeholder.com/150'}
-                      alt={user.displayName}
+                      // 🛑 Fix 2: getProfileImage function call
+                      src={getProfileImage()} 
+                      alt={user.displayName || 'User'}
                     />
-                    <span className="font-semibold text-blue-700">{user.displayName}</span>
+                    <span className="font-semibold text-blue-700">{user.displayName || 'User'}</span>
                   </div>
                   <Link
                     to="/profile"

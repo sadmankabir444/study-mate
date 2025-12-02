@@ -7,6 +7,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 
 const AuthContext = createContext(null);
@@ -16,52 +18,62 @@ const auth = getAuth(app);
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // initial load only
 
-  // Register user
-  const createUser = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+  // ❗ Global loading should be ONLY for initial auth check
+  const [loading, setLoading] = useState(true);
+
+  // ✔ Create user WITHOUT global loading
+  const createUser = async (email, password) => {
+    return await createUserWithEmailAndPassword(auth, email, password);
   };
 
-  // Login user
-  const signIn = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+  // ✔ Login WITHOUT global loading
+  const signIn = async (email, password) => {
+    return await signInWithEmailAndPassword(auth, email, password);
   };
 
-  // Update profile
+  // ✔ Google login WITHOUT global loading
+  const loginWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    setUser({ ...result.user });
+    return result.user;
+  };
+
+  // ✔ Update user and context
   const updateUser = async (updatedData) => {
-    if (!auth.currentUser) return Promise.reject("No user logged in");
+    if (!auth.currentUser) return;
     await updateProfile(auth.currentUser, updatedData);
     setUser({ ...auth.currentUser });
   };
 
-  // Logout
-  const logout = () => signOut(auth);
+  // ✔ Logout WITHOUT global loading
+  const logout = async () => {
+    await signOut(auth);
+  };
 
-  // Firebase listener
+  // ✔ initial login state detection only
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setLoading(false); // only used on first load
+      setLoading(false); // ONLY HERE
     });
 
-    return () => unSubscribe();
+    return () => unsubscribe();
   }, []);
 
   const authData = {
     user,
-    loading,
+    loading, // only for initial app check
     createUser,
     signIn,
     logout,
     updateUser,
-    setUser, // ✅ FIXED (added)
+    loginWithGoogle,
   };
 
   return (
-    <AuthContext.Provider value={authData}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
   );
 };
 

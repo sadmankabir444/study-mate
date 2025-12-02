@@ -6,7 +6,7 @@ import app from "../firebase/firebase.config";
 import { toast } from "react-toastify";
 
 const RegisterPage = () => {
-  const { createUser, setUser, updateUser } = useAuth();
+  const { createUser, updateUser, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const auth = getAuth(app);
@@ -25,12 +25,11 @@ const RegisterPage = () => {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  // 🔥 FIXED: async/await use
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const { name, photo, email, password } = form;
+    const { name, email, password, photo } = form;
 
     if (password.length < 6) {
       setPassError("Password should be more than 6 characters");
@@ -41,25 +40,21 @@ const RegisterPage = () => {
     }
 
     try {
-      // Create user
+      // 1. Create user
       const result = await createUser(email, password);
-      const user = result.user;
 
-      // Update profile
+      // 2. Update profile (Firebase + Context update)
       await updateUser({
         displayName: name,
         photoURL: photo,
       });
 
-      // Set user in context
-      setUser({ ...user, displayName: name, photoURL: photo });
-
-      // Reset form
-      setForm({ name: "", email: "", password: "", photo: "" });
-
       toast.success("Registered successfully!");
 
-      // 🔥 navigate now works perfectly
+      // 3. Reset form
+      setForm({ name: "", email: "", password: "", photo: "" });
+
+      // 4. Redirect to home
       navigate("/");
 
     } catch (error) {
@@ -70,18 +65,15 @@ const RegisterPage = () => {
     setLoading(false);
   };
 
-  const handleGoogleLogin = () => {
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        const user = result.user;
-        setUser(user);
-        toast.success("Registered and logged in with Google!");
-        navigate("/");
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error("Google login failed!");
-      });
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+      toast.success("Registered and logged in with Google!");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      toast.error("Google login failed!");
+    }
   };
 
   return (
