@@ -1,86 +1,103 @@
+// src/context/AuthContext.jsx
+
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    onAuthStateChanged, 
+    signOut, 
+    signInWithPopup,
+    updateProfile // User profile update korar jonno
+} from 'firebase/auth';
+// 🛑 IMPORTANT: firebase.config.js file theke auth and googleProvider import kora hoyechhe
+import { auth, googleProvider } from '../firebase/firebase.config.js'; 
 
-// Dummy user object for logged-in state
-const DUMMY_USER = {
-  uid: '123',
-  displayName: 'Priya Sharma',
-  email: 'priya@example.com',
-  photoURL: 'https://i.ibb.co/L8B9k0j/profile-dummy.jpg', // Replace with a generic image URL
-};
-
-// Create the Context
+// --- 1. Context Setup ---
 const AuthContext = createContext();
+export const useAuth = () => useContext(AuthContext);
+// ------------------------
 
-// Create the Provider Component
 export default function AuthProvider({ children }) {
-  // Set is loading true initially, will change in useEffect
   const [user, setUser] = useState(null);
+  // Loading state ensure kore je Firebase user-er info load korar aage app render hobena
   const [loading, setLoading] = useState(true);
 
-  // Dummy login function
-  const login = (email, password) => {
-    setLoading(true);
-    // Simulate API call delay
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email === 'test@example.com' && password === 'Pws123') {
-          setUser(DUMMY_USER); // Successfully logged in
-          resolve({ success: true, message: 'Login successful!' });
-        } else {
-          reject({ success: false, message: 'Invalid credentials or login failed.' });
-        }
-        setLoading(false);
-      }, 1000);
-    });
-  };
-
-  // Dummy registration function
+  // 2. Core Functions: Dummy functions gulo ekhon real Firebase API calls diye replace kora
+  
+  // Register Function: Email/Password + Name/Photo update
   const register = (name, email, photoURL, password) => {
     setLoading(true);
-    // Simulate API call delay
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const newUser = { uid: Date.now(), displayName: name, email, photoURL };
-        setUser(newUser); // Successful registration and immediate login
-        resolve({ success: true, message: 'Registration successful!' });
+    return createUserWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        const currentUser = userCredential.user;
+        // User profile update
+        return updateProfile(currentUser, {
+          displayName: name,
+          photoURL: photoURL
+        })
+        .then(() => {
+            // successful registration and profile update
+            return { success: true, message: 'Registration successful!' };
+        });
+      })
+      .catch(error => {
         setLoading(false);
-      }, 1000);
-    });
+        throw new Error(error.message); 
+      });
   };
 
-  // Dummy Google social login function
+  // Login Function: Email/Password
+  const login = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        return { success: true, message: 'Login successful!' };
+      })
+      .catch(error => {
+        setLoading(false);
+        throw new Error(error.message);
+      });
+  };
+  
+  // Google Login Function
   const googleLogin = () => {
     setLoading(true);
-    // Simulate Google login flow
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setUser(DUMMY_USER);
-        resolve({ success: true, message: 'Google Login successful!' });
+    return signInWithPopup(auth, googleProvider)
+      .then(() => {
+        return { success: true, message: 'Google Login successful!' };
+      })
+      .catch(error => {
         setLoading(false);
-      }, 1000);
-    });
+        throw new Error(error.message);
+      });
   };
 
-  // Dummy logout function
+  // Logout Function
   const logout = () => {
     setLoading(true);
-    setUser(null);
-    // Simulate logout process
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ success: true, message: 'Logout successful!' });
+    return signOut(auth)
+      .then(() => {
+        return { success: true, message: 'Logout successful!' };
+      })
+      .catch(error => {
         setLoading(false);
-      }, 500);
-    });
+        throw new Error(error.message);
+      });
   };
-
-  // Check initial login state (simulated)
+  
+  // 3. State Listener (Persistent Login Handling)
   useEffect(() => {
-    // Check local storage or token here for persistent login.
-    // For now, we set loading to false.
-    setLoading(false);
+    // onAuthStateChanged Firebase-er user state-e kono change hole (login/logout) call hoy
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      // currentUser object-e user logged in thakle tar details thake, na thakle null thake
+      setUser(currentUser); 
+      setLoading(false);
+    });
+    // Cleanup function: component unmount hole listener remove hoye jay
+    return () => unsubscribe(); 
   }, []);
 
+  // 4. Context Value
   const authInfo = {
     user,
     loading,
@@ -92,12 +109,8 @@ export default function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={authInfo}>
-      {children}
+      {/* Loading complete na howa porjonto children render hobena (prevents flashing login pages) */}
+      {!loading && children} 
     </AuthContext.Provider>
   );
 }
-
-// Custom hook to use the Auth Context
-export const useAuth = () => {
-  return useContext(AuthContext);
-};

@@ -4,7 +4,9 @@ import { FaGoogle, FaUserGraduate } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 
 // Import for Toast/SweetAlert (replace alert() in logic)
-// import { toast } from 'react-toastify'; 
+import { toast } from 'react-toastify'; 
+
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -22,12 +24,12 @@ const Login = () => {
     try {
       const response = await login(email, password);
       // Show success toast here
-      alert(response.message); // Replace with toast
+      toast(response.message); // Replace with toast
       navigate('/'); // Navigate to desired route or Home
     } catch (err) {
       setError(err.message || 'Login failed. Please check your credentials.');
       // Show failure toast here
-      alert(err.message || 'Login failed!'); // Replace with toast
+      toast(err.message || 'Login failed!'); // Replace with toast
     } finally {
       setLoading(false);
     }
@@ -39,12 +41,12 @@ const Login = () => {
     try {
       const response = await googleLogin();
       // Show success toast here
-      alert(response.message); // Replace with toast
+      toast(response.message); // Replace with toast
       navigate('/'); // Navigate to desired route or Home
     } catch (err) {
       setError(err.message || 'Google Login failed.');
       // Show failure toast here
-      alert(err.message || 'Google Login failed!'); // Replace with toast
+      toast(err.message || 'Google Login failed!'); // Replace with toast
     } finally {
       setLoading(false);
     }
