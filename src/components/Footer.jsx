@@ -1,41 +1,71 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaUserGraduate, FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
 
-export default function Footer(){
-return (
-<footer className="mt-12 border-t bg-white">
-<div className="container mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-<div>
-<div className="flex items-center gap-3">
-<div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-500 flex items-center justify-center text-white font-bold">SM</div>
-<div>
-<div className="font-bold">StudyMate</div>
-<div className="text-sm text-slate-500">Connect. Study. Grow.</div>
-</div>
-</div>
-<p className="mt-4 text-sm text-slate-600 max-w-sm">StudyMate helps students find compatible study partners by subject, skill and schedules — making studying social and effective.</p>
-</div>
+  const socialLinks = [
+    { icon: FaFacebook, href: '#', label: 'Facebook' },
+    { icon: FaTwitter, href: '#', label: 'Twitter' },
+    { icon: FaLinkedin, href: '#', label: 'LinkedIn' },
+    { icon: FaInstagram, href: '#', label: 'Instagram' },
+  ];
 
+  return (
+    <footer className="bg-gray-800 text-white mt-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 border-b border-gray-700 pb-8">
+          {/* Section 1: Logo and Description */}
+          <div className="md:col-span-2">
+            <Link to="/" className="flex items-center space-x-2 text-3xl font-bold text-indigo-400 mb-4">
+              <FaUserGraduate className="w-8 h-8" />
+              <span>StudyMate</span>
+            </Link>
+            <p className="text-gray-400 text-sm max-w-md">
+              StudyMate is your platform for connecting with highly-rated study partners globally. Achieve your academic goals together through collaborative learning and shared knowledge.
+            </p>
+          </div>
 
-<div className="flex flex-col">
-<h4 className="font-semibold">Quick Links</h4>
-<a href="/" className="mt-3 text-sm">Home</a>
-<a href="/find" className="mt-2 text-sm">Find Partners</a>
-<a href="/create" className="mt-2 text-sm">Create Profile</a>
-</div>
+          {/* Section 2: Quick Links (Example) */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/about" className="text-gray-400 hover:text-indigo-400 transition">About Us</Link></li>
+              <li><Link to="/contact" className="text-gray-400 hover:text-indigo-400 transition">Contact</Link></li>
+              <li><Link to="/faq" className="text-gray-400 hover:text-indigo-400 transition">FAQ</Link></li>
+              <li><Link to="/terms" className="text-gray-400 hover:text-indigo-400 transition">Terms of Service</Link></li>
+            </ul>
+          </div>
 
+          {/* Section 3: Social Media Links */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-4">Connect With Us</h3>
+            <div className="flex space-x-4">
+              {socialLinks.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  aria-label={item.label}
+                  className="text-gray-400 hover:text-indigo-400 transition duration-300"
+                >
+                  <item.icon className="w-6 h-6" />
+                </a>
+              ))}
+            </div>
+            <p className="text-gray-400 text-sm mt-4">Join our community!</p>
+          </div>
+        </div>
 
-<div>
-<h4 className="font-semibold">Follow Us</h4>
-<div className="mt-3 flex gap-3">
-<a href="#" aria-label="facebook" className="text-slate-500 text-sm">Facebook</a>
-<a href="#" aria-label="twitter" className="text-slate-500 text-sm">Twitter</a>
-<a href="#" aria-label="linkedin" className="text-slate-500 text-sm">LinkedIn</a>
-<a href="#" aria-label="instagram" className="text-slate-500 text-sm">Instagram</a>
-</div>
-</div>
-</div>
-<div className="bg-slate-50 text-slate-500 text-sm text-center py-4">© {new Date().getFullYear()} StudyMate — All rights reserved.</div>
-</footer>
-)
-}
+        {/* Copyright */}
+        <div className="pt-6 text-center">
+          <p className="text-gray-400 text-sm">
+            &copy; {currentYear} StudyMate. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
