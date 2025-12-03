@@ -10,6 +10,8 @@ import FindPartners from "./pages/FindPartners";
 import CreatePartnerProfile from "./pages/CreatePartnerProfile";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import { useAuth } from "./provider/AuthProvider";
+import PartnerDetailsPage from "./pages/PartnerDetailsPage";
+
 
 function App() {
   const { loading } = useAuth();
@@ -38,6 +40,7 @@ function App() {
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route path="profile" element={<Profile />} />
             <Route path="create-partner-profile" element={<CreatePartnerProfile />} />
+            <Route path="partner/:id" element={<PartnerDetailsPage />} />
             <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Route>
         </Routes>

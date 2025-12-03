@@ -8,7 +8,7 @@ const DUMMY_PARTNERS = [
   {
     id: 1,
     name: 'Alisha Rahman',
-    image: 'https://i.ibb.co/C0rS35J/alisha.jpg', // Placeholder
+    image: 'https://i.pinimg.com/280x280_RS/71/c5/51/71c5514a805826ca53ac97dfa002b2ab.jpg', // Placeholder
     subjects: 'Calculus, Physics',
     skills: 'Problem Solving, Tutoring',
     rating: 4.9,
@@ -17,7 +17,7 @@ const DUMMY_PARTNERS = [
   {
     id: 2,
     name: 'Samin Khan',
-    image: 'https://i.ibb.co/WzG5K9x/samin.jpg', // Placeholder
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjllhF3m97JRuNMaio_pFAw69r3SjP_vdG8A&s', // Placeholder
     subjects: 'Web Development, Data Structure',
     skills: 'JavaScript, React, Tailwind',
     rating: 4.8,
@@ -26,7 +26,7 @@ const DUMMY_PARTNERS = [
   {
     id: 3,
     name: 'Nusrat Jahan',
-    image: 'https://i.ibb.co/hR15yF7/exam-success.jpg', // Placeholder
+    image: 'https://resize.indiatvnews.com/en/resize/newbucket/355_-/2020/09/capture-1600680322.jpg', // Placeholder
     subjects: 'Biology, Chemistry',
     skills: 'Lab Work, Exam Preparation',
     rating: 4.7,
