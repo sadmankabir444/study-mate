@@ -2,6 +2,7 @@ import React from 'react';
 import { FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../provider/AuthProvider';
+import { toast } from 'react-toastify';
 
 const PartnerCard = ({ partner }) => {
   const navigate = useNavigate();
@@ -9,12 +10,15 @@ const PartnerCard = ({ partner }) => {
 
   const handleViewProfile = () => {
     if (user) {
-      // If logged in, go to details page
       navigate(`/partner/${partner.id}`);
     } else {
-      // If not logged in, redirect to login page
-      alert('Please login to view profile details!'); // Replace with toast
-      navigate('/login');
+      toast("Please login to view profile details!");
+
+      navigate('/login', {
+        state: {
+          from: { pathname: `/partner/${partner.id}` }
+        }
+      });
     }
   };
 

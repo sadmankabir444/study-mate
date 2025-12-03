@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/AuthProvider";
-import { useNavigate } from "react-router-dom";
-
 
 const PartnerDetailsPage = () => {
   const { id } = useParams();
@@ -10,16 +8,18 @@ const PartnerDetailsPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  // If logged out, redirect to login
   useEffect(() => {
-  // If user logs out, redirect to login
-  if (user === null) {
-    navigate("/login");
-  }
-}, [user, navigate]);
+    if (user === null) {
+      navigate("/login", {
+        state: {
+          from: { pathname: `/partner/${id}` }
+        }
+      });
+    }
+  }, [user, navigate, id]);
 
-
-
-  // Dummy API simulation — later you will fetch from backend
+  // Dummy API data simulation
   useEffect(() => {
     const dummyPartners = [
       {
@@ -54,10 +54,7 @@ const PartnerDetailsPage = () => {
       },
     ];
 
-    const found = dummyPartners.find(
-      (partner) => partner.id === Number(id)
-    );
-
+    const found = dummyPartners.find((p) => p.id === Number(id));
     setPartner(found);
   }, [id]);
 
