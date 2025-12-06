@@ -1,51 +1,240 @@
-import React from 'react';
+import React, { useState } from "react";
+import { useAuth } from "../provider/AuthProvider";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const CreatePartnerProfile = () => {
+  const { user } = useAuth();
+  // const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    image: "",
+    subject: "",
+    studyMode: "Online",
+    availability: "",
+    location: "",
+    experienceLevel: "Beginner",
+    rating: 0,
+    partnerCount: 0,
+    email: user?.email || "",
+  });
+
+  // handle input change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // submit form
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const res = await fetch("http://localhost:5000/partners", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(formData),
+  //     });
+
+  //     if (res.ok) {
+  //       toast.success("Profile created successfully!");
+  //       navigate("/find-partners");
+  //     } else {
+  //       toast.error("Failed to create profile!");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Server error!");
+  //   }
+  // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = 
+    {
+      name: e.target.name.value,
+      image: e.target.image.value,
+      subject: e.target.subject.value,
+      studyMode: e.target.studyMode.value,
+      availability: e.target.availability.value,
+      location: e.target.location.value,
+      experienceLevel: e.target.experienceLevel.value,
+    }  
+
+    fetch("http://localhost:5000/partners", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    })
+    .then(res => res.json()
+    ).then(data => {
+      console.log(data);
+    })
+    .catch (err => {
+      console.log(err);
+    })
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-2xl p-8 border border-gray-200">
-        <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-6">Create Your Partner Profile</h1>
-        <p className="text-center text-gray-600 mb-8">
-          This profile will be visible to other users. Provide accurate details to find the best match!
-        </p>
-        
-        {/* Placeholder for the form */}
-        <div className="p-6 bg-indigo-50 rounded-lg border border-indigo-200">
-          <form className="space-y-6">
-            {/* Subject/Skill input groups */}
-            <label className="block text-sm font-medium text-gray-700">Subjects you can teach/study (e.g., Physics, JS)</label>
-            <textarea 
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                rows="3" 
-                placeholder="List your subjects and skills, separated by commas..."
-            ></textarea>
+        <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-6">
+          Create Your Study Partner Profile
+        </h1>
 
-            {/* Availability input */}
-            <label className="block text-sm font-medium text-gray-700">Availability (Timezone/Hours)</label>
-            <input 
-                type="text" 
+        <p className="text-center text-gray-600 mb-8">
+          Fill out your details so other students can find and connect with you.
+        </p>
+
+        <div className="p-6 bg-indigo-50 rounded-lg border border-indigo-200">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Full Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                required
+                value={formData.name}
+                onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="E.g., Weekdays 7 PM - 10 PM IST"
-            />
-            
-            {/* Bio/Description */}
-            <label className="block text-sm font-medium text-gray-700">Short Bio / Teaching Style</label>
-            <textarea 
+                placeholder="Enter your full name"
+              />
+            </div>
+
+            {/* Profile Image */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Profile Image URL
+              </label>
+              <input
+                type="text"
+                name="image"
+                required
+                value={formData.image}
+                onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                rows="5" 
-                placeholder="Tell others about your study methods and expertise..."
-            ></textarea>
-            
-            <button 
-                type="submit" 
-                className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200"
+                placeholder="Paste your profile image URL"
+              />
+            </div>
+
+            {/* Subject */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Subject
+              </label>
+              <input
+                type="text"
+                name="subject"
+                required
+                value={formData.subject}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="e.g., Math, English, Programming"
+              />
+            </div>
+
+            {/* Study Mode */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Study Mode
+              </label>
+              <select
+                name="studyMode"
+                value={formData.studyMode}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-indigo-500 focus:border-indigo-500"
+              >
+                <option value="Online">Online</option>
+                <option value="Offline">Offline</option>
+              </select>
+            </div>
+
+            {/* Availability */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Availability Time
+              </label>
+              <input
+                type="text"
+                name="availability"
+                required
+                value={formData.availability}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="e.g., Evening 6–9 PM"
+              />
+            </div>
+
+            {/* Location */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Location
+              </label>
+              <input
+                type="text"
+                name="location"
+                required
+                value={formData.location}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="City / Area / Preferred location"
+              />
+            </div>
+
+            {/* Experience Level */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Experience Level
+              </label>
+              <select
+                name="experienceLevel"
+                value={formData.experienceLevel}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-indigo-500 focus:border-indigo-500"
+              >
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Expert">Expert</option>
+              </select>
+            </div>
+
+            {/* Email (read only) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Your Email (Read Only)
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                readOnly
+                className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+              />
+            </div>
+
+            {/* Hidden default fields */}
+            <input type="hidden" name="rating" value={formData.rating} />
+            <input type="hidden" name="partnerCount" value={formData.partnerCount} />
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200"
             >
-                Save Partner Profile
+              Create Profile
             </button>
           </form>
         </div>
-        
-        <p className="mt-6 text-center text-sm text-gray-500">Note: Only logged-in users can access this page and create a profile.</p>
+
+        <p className="mt-6 text-center text-sm text-gray-500">
+          Only logged-in users can create a partner profile.
+        </p>
       </div>
     </div>
   );
