@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/AuthProvider";
-import { GoogleAuthProvider, getAuth } from "firebase/auth";
-import app from "../firebase/firebase.config";
 import { toast } from "react-toastify";
 
 const RegisterPage = () => {
   const { createUser, updateUser, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
-  const auth = getAuth(app);
-  const googleProvider = new GoogleAuthProvider();
 
   const [form, setForm] = useState({
     name: "",
@@ -19,6 +15,7 @@ const RegisterPage = () => {
   });
   const [passError, setPassError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,33 +35,24 @@ const RegisterPage = () => {
     }
 
     try {
-      // 1. Create user
       await createUser(email, password);
-
-      // 2. Update profile
-      await updateUser({
-        displayName: name,
-        photoURL: photo,
-      });
+      await updateUser({ displayName: name, photoURL: photo });
 
       toast.success("Registered successfully!");
-
-      // 3. Reset form
       setForm({ name: "", email: "", password: "", photo: "" });
-
-      // 4. Redirect to homepage WITHOUT reload
       navigate("/", { replace: true });
-
     } catch (error) {
       console.error(error);
       toast.error(error.message || "Registration failed!");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
+    if (googleLoading) return; // prevent multiple popups
+    setGoogleLoading(true);
+
     try {
       await loginWithGoogle();
       toast.success("Registered and logged in with Google!");
@@ -72,8 +60,9 @@ const RegisterPage = () => {
     } catch (error) {
       console.error(error);
       toast.error("Google login failed!");
+    } finally {
+      setGoogleLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -154,6 +143,7 @@ const RegisterPage = () => {
 
         <button
           onClick={handleGoogleLogin}
+          disabled={googleLoading}
           className="w-full py-3 rounded-lg font-semibold bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 flex items-center justify-center gap-2"
         >
           <img
@@ -161,7 +151,7 @@ const RegisterPage = () => {
             alt="Google"
             className="w-5 h-5"
           />
-          Continue with Google
+          {googleLoading ? "Please wait..." : "Continue with Google"}
         </button>
 
         <p className="text-center text-sm text-gray-600 mt-4">

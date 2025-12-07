@@ -9,7 +9,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // handle object from PartnerCard
   const redirectPath = location.state?.from?.pathname || "/";
 
   const [email, setEmail] = useState("");
@@ -17,6 +16,7 @@ const LoginPage = () => {
   const [localError, setLocalError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false); // prevent multiple Google popups
 
   const getFriendlyErrorMessage = (errorCode) => {
     switch (errorCode) {
@@ -41,25 +41,30 @@ const LoginPage = () => {
       toast.success("Logged in successfully!");
       setEmail("");
       setPassword("");
-      navigate(redirectPath, { replace: true }); // redirect to original page
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       const friendlyMessage = getFriendlyErrorMessage(err?.code);
       setLocalError(friendlyMessage);
       toast.error(friendlyMessage);
+    } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
+    if (googleLoading) return; // prevent multiple popups
+    setGoogleLoading(true);
     setLocalError("");
+
     try {
       await loginWithGoogle();
       toast.success("Logged in with Google!");
       navigate(redirectPath, { replace: true });
     } catch (err) {
-      toast.error("Google sign-in failed.");
-      setLoading(false);
+      console.error(err);
+      toast.error("Google sign-in failed!");
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -113,9 +118,7 @@ const LoginPage = () => {
           <button
             type="submit"
             className={`w-full py-3 mt-4 rounded-lg font-semibold transition duration-150 ${
-              loading
-                ? "bg-indigo-400 cursor-not-allowed text-white"
-                : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-md"
+              loading ? "bg-indigo-400 cursor-not-allowed text-white" : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-md"
             }`}
             disabled={loading}
           >
@@ -132,14 +135,14 @@ const LoginPage = () => {
         <button
           onClick={handleGoogleLogin}
           className="w-full py-3 rounded-lg font-semibold bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-100 flex items-center justify-center gap-2 shadow-sm transition duration-150"
-          disabled={loading}
+          disabled={googleLoading}
         >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
             alt="Google"
             className="w-5 h-5"
           />
-          Continue with Google
+          {googleLoading ? "Please wait..." : "Continue with Google"}
         </button>
 
         <p className="text-center text-sm text-gray-600 dark:text-gray-300 mt-6">

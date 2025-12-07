@@ -7,6 +7,7 @@ const PartnerDetailsPage = () => {
   const { id } = useParams();
   const [partner, setPartner] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [requestLoading, setRequestLoading] = useState(false); // ✅ loading for send request
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -34,6 +35,7 @@ const PartnerDetailsPage = () => {
 
   const handleSendRequest = async () => {
     if (!user) return;
+    setRequestLoading(true); // ✅ start loading
 
     try {
       // Increase partner count
@@ -64,6 +66,8 @@ const PartnerDetailsPage = () => {
     } catch (err) {
       console.error(err);
       toast.error("Failed to send request");
+    } finally {
+      setRequestLoading(false); // ✅ stop loading
     }
   };
 
@@ -83,7 +87,13 @@ const PartnerDetailsPage = () => {
           <p className="mt-2">Experience Level: <span className="font-semibold">{partner.experienceLevel}</span></p>
           <p className="mt-4 text-yellow-500 font-bold">⭐ {partner.rating || 0} / 5</p>
           <p className="mt-2">Connected Partners: <span className="font-semibold">{partner.partnerCount || 0}</span></p>
-          <button onClick={handleSendRequest} className="mt-6 w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-md">Send Partner Request</button>
+          <button
+            onClick={handleSendRequest}
+            disabled={requestLoading}
+            className={`mt-6 w-full py-3 rounded-lg shadow-md text-white ${requestLoading ? "bg-indigo-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"}`}
+          >
+            {requestLoading ? "Sending..." : "Send Partner Request"}
+          </button>
         </div>
       </div>
     </div>
