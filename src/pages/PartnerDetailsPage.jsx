@@ -19,7 +19,7 @@ const PartnerDetailsPage = () => {
   useEffect(() => {
     const fetchPartner = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/partners/${id}`);
+        const res = await fetch(`https://study-mate-seven-blond.vercel.app/partners/${id}`);
         if (!res.ok) throw new Error("Partner not found");
         const data = await res.json();
         setPartner(data);
@@ -37,7 +37,7 @@ const PartnerDetailsPage = () => {
 
     try {
       // Increase partner count
-      await fetch(`http://localhost:5000/partners/${id}/increase-count`, { method: "PATCH" });
+      await fetch(`https://study-mate-seven-blond.vercel.app/partners/${id}/increase-count`, { method: "PATCH" });
 
       const requestData = {
         partnerId: id,
@@ -52,7 +52,7 @@ const PartnerDetailsPage = () => {
         requestedAt: new Date()
       };
 
-      const res = await fetch("http://localhost:5000/partner-requests", {
+      const res = await fetch("https://study-mate-seven-blond.vercel.app/partner-requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestData)

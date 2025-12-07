@@ -6,9 +6,9 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: FaFacebook, href: '#', label: 'Facebook' },
+    { icon: FaFacebook, href: 'https://www.facebook.com/profile.php?id=61576964673876', label: 'Facebook' },
     { icon: FaTwitter, href: '#', label: 'Twitter' },
-    { icon: FaLinkedin, href: '#', label: 'LinkedIn' },
+    { icon: FaLinkedin, href: 'https://www.linkedin.com/feed/', label: 'LinkedIn' },
     { icon: FaInstagram, href: '#', label: 'Instagram' },
   ];
 

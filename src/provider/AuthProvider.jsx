@@ -19,7 +19,7 @@ const auth = getAuth(app);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // ❗ Global loading should be ONLY for initial auth check
+  // Global loading should be ONLY for initial auth check
   const [loading, setLoading] = useState(true);
 
   // ✔ Create user WITHOUT global loading
@@ -56,7 +56,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setLoading(false); // ONLY HERE
+      setLoading(false); 
     });
 
     return () => unsubscribe();
@@ -64,7 +64,7 @@ const AuthProvider = ({ children }) => {
 
   const authData = {
     user,
-    loading, // only for initial app check
+    loading, 
     createUser,
     signIn,
     logout,

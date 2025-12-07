@@ -14,6 +14,8 @@ import PartnerDetailsPage from "./pages/PartnerDetailsPage";
 import { useAuth } from "./provider/AuthProvider";
 import MyConnectionsPage from "./pages/MyConnectionsPage";
 
+const API_BASE = "https://study-mate-seven-blond.vercel.app";
+
 function App() {
   const { loading } = useAuth();
 
@@ -33,13 +35,35 @@ function App() {
     {
       path: "/",
       element: <Layout />,
+      errorElement: (
+        <div className="min-h-screen flex items-center justify-center text-center p-10">
+          <div>
+            <h1 className="text-3xl font-bold text-red-500">
+              Something went wrong 😢
+            </h1>
+            <p className="mt-2 text-gray-600">
+              Failed to load data from server. Please make sure backend is running.
+            </p>
+          </div>
+        </div>
+      ),
       children: [
         { index: true, element: <Home /> },
 
         {
           path: "find-partners",
           element: <FindPartners />,
-          loader: () => fetch("http://localhost:5000/partners"),
+          loader: async () => {
+            try {
+              const res = await fetch(`${API_BASE}/partners`);
+              if (!res.ok) {
+                return [];
+              }
+              return res.json();
+            } catch (err) {
+              return [];
+            }
+          },
         },
 
         { path: "login", element: <LoginPage /> },
@@ -51,21 +75,21 @@ function App() {
         {
           path: "partner/:id",
           element: <PartnerDetailsPage />,
-          loader: ({ params }) =>
-            fetch(`http://localhost:5000/partners/${params.id}`)
-              .then((res) => {
-                if (!res.ok) throw new Error("Not Found");
-                return res.json();
-              })
-              .catch(() => {
-                throw new Response("Not Found", { status: 404 });
-              }),
-        },
-        {
-          path: "my-connections",
-          element: <MyConnectionsPage />
+          loader: async ({ params }) => {
+            try {
+              const res = await fetch(`${API_BASE}/partners/${params.id}`);
+              if (!res.ok) return null;
+              return res.json();
+            } catch {
+              return null;
+            }
+          },
         },
 
+        {
+          path: "my-connections",
+          element: <MyConnectionsPage />,
+        },
 
         { path: "*", element: <div className="p-10 text-center text-xl">404 – Page Not Found</div> },
       ],

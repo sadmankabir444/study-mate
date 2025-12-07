@@ -11,7 +11,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const res = await fetch("http://localhost:5000/partners");
+        const res = await fetch("https://study-mate-seven-blond.vercel.app/partners");
         if (!res.ok) throw new Error("Failed to fetch partners");
         const data = await res.json();
         // Show only first 3 partners

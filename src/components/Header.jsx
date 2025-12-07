@@ -10,11 +10,9 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Fallback function for photoURL
-  // This checks if the photoURL is a truthy value (not null, not undefined) 
-  // AND if it is not an empty string. If not, it uses a placeholder.
+  
   const getProfileImage = () => {
-    // 🛑 Ekhane shomadhan: check kora hocche jeno "" empty string na thake.
+    
     if (user && user.photoURL && user.photoURL.length > 0) {
       return user.photoURL;
     }
@@ -51,7 +49,7 @@ const Header = () => {
         : 'text-gray-600'
     }`;
 
-  // Full-page gradient spinner with smooth animation
+  
   if (loading)
     return (
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white bg-opacity-90">
@@ -100,7 +98,7 @@ const Header = () => {
                 >
                   <img
                     className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
-                    // 🛑 Fix 1: getProfileImage function call
+                    
                     src={getProfileImage()} 
                     alt={user.displayName || 'User'}
                     title={user.displayName || 'User Profile'}

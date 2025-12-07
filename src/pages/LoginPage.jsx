@@ -9,7 +9,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const redirectPath = location.state?.from || "/";
+  // handle object from PartnerCard
+  const redirectPath = location.state?.from?.pathname || "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +41,7 @@ const LoginPage = () => {
       toast.success("Logged in successfully!");
       setEmail("");
       setPassword("");
-      navigate(redirectPath, { replace: true });
+      navigate(redirectPath, { replace: true }); // redirect to original page
     } catch (err) {
       const friendlyMessage = getFriendlyErrorMessage(err?.code);
       setLocalError(friendlyMessage);

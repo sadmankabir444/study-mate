@@ -14,7 +14,7 @@ const MyConnectionsPage = () => {
     const fetchRequests = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/partner-requests?email=${user.email}`
+          `https://study-mate-seven-blond.vercel.app/partner-requests?email=${user.email}`
         );
         const data = await res.json();
         setRequests(data);
@@ -34,11 +34,11 @@ const MyConnectionsPage = () => {
   const confirmDelete = async () => {
     const request = deleteModal;
     try {
-      await fetch(`http://localhost:5000/partner-requests/${request._id}`, {
+      await fetch(`https://study-mate-seven-blond.vercel.app/partner-requests/${request._id}`, {
         method: "DELETE",
       });
       await fetch(
-        `http://localhost:5000/partners/${request.partnerId}/decrease-count`,
+        `https://study-mate-seven-blond.vercel.app/partners/${request.partnerId}/decrease-count`,
         { method: "PATCH" }
       );
       setRequests((prev) => prev.filter((r) => r._id !== request._id));
@@ -63,7 +63,7 @@ const MyConnectionsPage = () => {
       };
 
       const res = await fetch(
-        `http://localhost:5000/partner-requests/${editingRequest._id}`,
+        `https://study-mate-seven-blond.vercel.app/partner-requests/${editingRequest._id}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },

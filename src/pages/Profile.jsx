@@ -38,14 +38,14 @@ const Profile = () => {
                                 <p><strong>Email:</strong> {user.email || 'N/A'}</p>
                             </div>
                             <div className="flex items-center space-x-3 text-gray-700">
-                                {/* Example of a custom field */}
+                                
                                 <span className="text-indigo-500 font-bold">ID:</span>
                                 <p>{user.uid}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                {/* You can add an Edit Profile button here */}
+                
                 <div className="mt-8 text-center">
                     <button className="px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition duration-200">
                         Edit Profile
