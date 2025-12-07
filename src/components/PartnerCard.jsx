@@ -12,9 +12,7 @@ const PartnerCard = ({ partner }) => {
       navigate(`/partner/${partner._id}`);
     } else {
       toast("Please login to view profile details!");
-      navigate("/login", {
-        state: { from: { pathname: `/partner/${partner._id}` } },
-      });
+      navigate("/login", { state: { from: `/partner/${partner._id}` } });
     }
   };
 
@@ -51,9 +49,7 @@ const PartnerCard = ({ partner }) => {
 
       <div className="mt-1 text-gray-700 text-sm text-center">
         Experience:{" "}
-        <span className="font-semibold text-gray-900">
-          {partner.experienceLevel}
-        </span>
+        <span className="font-semibold text-gray-900">{partner.experienceLevel}</span>
       </div>
 
       <button

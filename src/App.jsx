@@ -12,6 +12,7 @@ import CreatePartnerProfile from "./pages/CreatePartnerProfile";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import PartnerDetailsPage from "./pages/PartnerDetailsPage";
 import { useAuth } from "./provider/AuthProvider";
+import MyConnectionsPage from "./pages/MyConnectionsPage";
 
 function App() {
   const { loading } = useAuth();
@@ -60,6 +61,11 @@ function App() {
                 throw new Response("Not Found", { status: 404 });
               }),
         },
+        {
+          path: "my-connections",
+          element: <MyConnectionsPage />
+        },
+
 
         { path: "*", element: <div className="p-10 text-center text-xl">404 – Page Not Found</div> },
       ],

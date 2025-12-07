@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/AuthProvider";
-import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
+import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import app from "../firebase/firebase.config";
 import { toast } from "react-toastify";
 
 const RegisterPage = () => {
   const { createUser, updateUser, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
-
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
 
@@ -18,7 +17,6 @@ const RegisterPage = () => {
     password: "",
     photo: "",
   });
-
   const [passError, setPassError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +30,7 @@ const RegisterPage = () => {
     const { name, email, password, photo } = form;
 
     if (password.length < 6) {
-      setPassError("Password should be more than 6 characters");
+      setPassError("Password should be at least 6 characters");
       setLoading(false);
       return;
     } else {
@@ -41,9 +39,9 @@ const RegisterPage = () => {
 
     try {
       // 1. Create user
-      const result = await createUser(email, password);
+      await createUser(email, password);
 
-      // 2. Update profile (Firebase + Context update)
+      // 2. Update profile
       await updateUser({
         displayName: name,
         photoURL: photo,
@@ -54,26 +52,28 @@ const RegisterPage = () => {
       // 3. Reset form
       setForm({ name: "", email: "", password: "", photo: "" });
 
-      // 4. Redirect to home
-      navigate("/");
+      // 4. Redirect to homepage WITHOUT reload
+      navigate("/", { replace: true });
 
     } catch (error) {
       console.error(error);
-      toast.error(error.message);
+      toast.error(error.message || "Registration failed!");
     }
 
     setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
+    setLoading(true);
     try {
       await loginWithGoogle();
       toast.success("Registered and logged in with Google!");
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (error) {
       console.error(error);
       toast.error("Google login failed!");
     }
+    setLoading(false);
   };
 
   return (
@@ -89,7 +89,7 @@ const RegisterPage = () => {
             <input
               type="text"
               name="name"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full p-3 border rounded-lg"
               placeholder="Your name"
               value={form.name}
               onChange={handleChange}
@@ -102,7 +102,7 @@ const RegisterPage = () => {
             <input
               type="email"
               name="email"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full p-3 border rounded-lg"
               placeholder="your@email.com"
               value={form.email}
               onChange={handleChange}
@@ -115,11 +115,10 @@ const RegisterPage = () => {
             <input
               type="text"
               name="photo"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full p-3 border rounded-lg"
               placeholder="Your photo URL"
               value={form.photo}
               onChange={handleChange}
-              required
             />
           </div>
 
@@ -128,7 +127,7 @@ const RegisterPage = () => {
             <input
               type="password"
               name="password"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full p-3 border rounded-lg"
               placeholder="••••••••"
               value={form.password}
               onChange={handleChange}
@@ -141,13 +140,9 @@ const RegisterPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="btn w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+            className="w-full py-3 mt-2 rounded-lg font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition duration-150"
           >
-            {loading ? (
-              <span className="loading loading-spinner loading-sm"></span>
-            ) : (
-              "Register"
-            )}
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
@@ -159,7 +154,7 @@ const RegisterPage = () => {
 
         <button
           onClick={handleGoogleLogin}
-          className="btn w-full bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 flex items-center justify-center gap-2"
+          className="w-full py-3 rounded-lg font-semibold bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 flex items-center justify-center gap-2"
         >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"

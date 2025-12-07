@@ -1,68 +1,56 @@
-import React from 'react';
-import Carousel from '../components/Carousel';
-import PartnerCard from '../components/PartnerCard';
-import { FaChalkboardTeacher, FaUsers, FaCheckCircle, FaQuoteLeft } from 'react-icons/fa';
-
-// Dummy data for Top Study Partners (Replace with MongoDB data fetching)
-const DUMMY_PARTNERS = [
-  {
-    id: 1,
-    name: 'Alisha Rahman',
-    image: 'https://i.pinimg.com/280x280_RS/71/c5/51/71c5514a805826ca53ac97dfa002b2ab.jpg', // Placeholder
-    subjects: 'Calculus, Physics',
-    skills: 'Problem Solving, Tutoring',
-    rating: 4.9,
-    reviews: 120,
-  },
-  {
-    id: 2,
-    name: 'Samin Khan',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjllhF3m97JRuNMaio_pFAw69r3SjP_vdG8A&s', // Placeholder
-    subjects: 'Web Development, Data Structure',
-    skills: 'JavaScript, React, Tailwind',
-    rating: 4.8,
-    reviews: 95,
-  },
-  {
-    id: 3,
-    name: 'Nusrat Jahan',
-    image: 'https://resize.indiatvnews.com/en/resize/newbucket/355_-/2020/09/capture-1600680322.jpg', // Placeholder
-    subjects: 'Biology, Chemistry',
-    skills: 'Lab Work, Exam Preparation',
-    rating: 4.7,
-    reviews: 150,
-  },
-];
-
-// Dummy data for Testimonials
-const DUMMY_TESTIMONIALS = [
-    {
-        id: 1,
-        quote: "StudyMate changed my entire exam prep. I found an amazing partner who helped me master Calculus. Highly recommend!",
-        name: "Rifat Hasan",
-        subject: "Engineering Student",
-    },
-    {
-        id: 2,
-        quote: "The platform is incredibly user-friendly. Finding someone with the exact same focus areas as me was effortless. Two thumbs up!",
-        name: "Sadia Afroz",
-        subject: "Medical Aspirant",
-    },
-    {
-        id: 3,
-        quote: "I've connected with students from different universities. The diverse knowledge base has been invaluable for my final projects.",
-        name: "Tanzim Ahmed",
-        subject: "Computer Science Major",
-    },
-];
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Carousel from "../components/Carousel";
+import PartnerCard from "../components/PartnerCard";
+import { FaChalkboardTeacher, FaUsers, FaCheckCircle, FaQuoteLeft } from "react-icons/fa";
 
 const Home = () => {
-  // In a real application, you would fetch partners here:
-  // useEffect(() => { /* fetch partners from backend */ }, []); 
+  const [topPartners, setTopPartners] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPartners = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/partners");
+        if (!res.ok) throw new Error("Failed to fetch partners");
+        const data = await res.json();
+        // Show only first 3 partners
+        setTopPartners(data.slice(0, 3));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchPartners();
+  }, []);
+
+  // Dummy data for Testimonials
+  const DUMMY_TESTIMONIALS = [
+    {
+      id: 1,
+      quote:
+        "StudyMate changed my entire exam prep. I found an amazing partner who helped me master Calculus. Highly recommend!",
+      name: "Rifat Hasan",
+      subject: "Engineering Student",
+    },
+    {
+      id: 2,
+      quote:
+        "The platform is incredibly user-friendly. Finding someone with the exact same focus areas as me was effortless. Two thumbs up!",
+      name: "Sadia Afroz",
+      subject: "Medical Aspirant",
+    },
+    {
+      id: 3,
+      quote:
+        "I've connected with students from different universities. The diverse knowledge base has been invaluable for my final projects.",
+      name: "Tanzim Ahmed",
+      subject: "Computer Science Major",
+    },
+  ];
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      
       {/* 1. Banner / Hero Section (Carousel) */}
       <section className="mb-16">
         <Carousel />
@@ -74,17 +62,20 @@ const Home = () => {
           🔥 Top-Rated Study Partners
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {DUMMY_PARTNERS.map((partner) => (
-            <PartnerCard key={partner.id} partner={partner} />
+          {topPartners.map((partner) => (
+            <PartnerCard key={partner._id} partner={partner} />
           ))}
         </div>
         <div className="text-center mt-10">
-            <button className="px-8 py-3 bg-white border-2 border-indigo-600 text-indigo-600 font-semibold rounded-full hover:bg-indigo-50 transition duration-300">
-                View All Partners
-            </button>
+          <button
+            onClick={() => navigate("/find-partners")}
+            className="px-8 py-3 bg-indigo-400 text-white font-semibold rounded-full hover:bg-indigo-700 transition duration-300"
+          >
+            View All Partners
+          </button>
         </div>
       </section>
-      
+
       <hr className="my-12 border-gray-200" />
 
       {/* 3. How It Works Section */}
@@ -92,47 +83,46 @@ const Home = () => {
         <h2 className="text-4xl font-extrabold text-gray-900 text-center mb-10">
           💡 How StudyMate Works
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            {/* Step 1 */}
-            <div className="p-6 bg-white rounded-xl shadow-lg border border-gray-100">
-                <FaCheckCircle className="w-10 h-10 text-indigo-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-3 text-gray-900">1. Create Profile</h3>
-                <p className="text-gray-600">Tell us your subjects, skills, and study goals to get started.</p>
-            </div>
-            {/* Step 2 */}
-            <div className="p-6 bg-white rounded-xl shadow-lg border border-gray-100">
-                <FaUsers className="w-10 h-10 text-indigo-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-3 text-gray-900">2. Find Your Match</h3>
-                <p className="text-gray-600">Browse highly-rated partners based on real-time ratings and reviews.</p>
-            </div>
-            {/* Step 3 */}
-            <div className="p-6 bg-white rounded-xl shadow-lg border border-gray-100">
-                <FaChalkboardTeacher className="w-10 h-10 text-indigo-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-3 text-gray-900">3. Start Collaborating</h3>
-                <p className="text-gray-600">Connect, share knowledge, and achieve academic excellence together.</p>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+          <div className="p-6 bg-indigo-50 rounded-2xl shadow-lg border-l-4 border-indigo-600 hover:scale-105 transform transition">
+            <FaCheckCircle className="w-10 h-10 text-indigo-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold mb-3 text-gray-900">1. Create Profile</h3>
+            <p className="text-gray-700">Share your subjects, skills, and goals to get started.</p>
+          </div>
+          <div className="p-6 bg-indigo-50 rounded-2xl shadow-lg border-l-4 border-indigo-600 hover:scale-105 transform transition">
+            <FaUsers className="w-10 h-10 text-indigo-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold mb-3 text-gray-900">2. Find Your Match</h3>
+            <p className="text-gray-700">Browse top partners based on ratings, reviews, and expertise.</p>
+          </div>
+          <div className="p-6 bg-indigo-50 rounded-2xl shadow-lg border-l-4 border-indigo-600 hover:scale-105 transform transition">
+            <FaChalkboardTeacher className="w-10 h-10 text-indigo-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold mb-3 text-gray-900">3. Start Collaborating</h3>
+            <p className="text-gray-700">Connect, share knowledge, and achieve academic success together.</p>
+          </div>
         </div>
       </section>
-      
+
       <hr className="my-12 border-gray-200" />
 
-      {/* 4. Testimonials / Review Section */}
+      {/* 4. Testimonials Section */}
       <section className="mb-16">
         <h2 className="text-4xl font-extrabold text-gray-900 text-center mb-10">
           ⭐ What Our Users Say
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {DUMMY_TESTIMONIALS.map(testimonial => (
-                <div key={testimonial.id} className="p-8 bg-indigo-50 rounded-xl shadow-lg border-l-4 border-indigo-600">
-                    <FaQuoteLeft className="w-6 h-6 text-indigo-400 mb-4" />
-                    <p className="text-gray-700 italic mb-4">"{testimonial.quote}"</p>
-                    <p className="font-bold text-gray-900">{testimonial.name}</p>
-                    <p className="text-sm text-indigo-600">{testimonial.subject}</p>
-                </div>
-            ))}
+          {DUMMY_TESTIMONIALS.map((testimonial) => (
+            <div
+              key={testimonial.id}
+              className="p-8 bg-white rounded-2xl shadow-lg border-t-4 border-indigo-600 hover:shadow-2xl transition"
+            >
+              <FaQuoteLeft className="w-6 h-6 text-indigo-400 mb-4" />
+              <p className="text-gray-700 italic mb-4">"{testimonial.quote}"</p>
+              <p className="font-bold text-gray-900">{testimonial.name}</p>
+              <p className="text-sm text-indigo-600">{testimonial.subject}</p>
+            </div>
+          ))}
         </div>
       </section>
-
     </div>
   );
 };

@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 const CreatePartnerProfile = () => {
   const { user } = useAuth();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
-    image: "",
+    profileimage: "",
     subject: "",
     studyMode: "Online",
     availability: "",
@@ -20,62 +20,49 @@ const CreatePartnerProfile = () => {
     email: user?.email || "",
   });
 
-  // handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // submit form
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const res = await fetch("http://localhost:5000/partners", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(formData),
-  //     });
-
-  //     if (res.ok) {
-  //       toast.success("Profile created successfully!");
-  //       navigate("/find-partners");
-  //     } else {
-  //       toast.error("Failed to create profile!");
-  //     }
-  //   } catch (error) {
-  //     toast.error("Server error!");
-  //   }
-  // };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = 
-    {
-      name: e.target.name.value,
-      image: e.target.image.value,
-      subject: e.target.subject.value,
-      studyMode: e.target.studyMode.value,
-      availability: e.target.availability.value,
-      location: e.target.location.value,
-      experienceLevel: e.target.experienceLevel.value,
-    }  
 
-    fetch("http://localhost:5000/partners", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    })
-    .then(res => res.json()
-    ).then(data => {
-      console.log(data);
-    })
-    .catch (err => {
-      console.log(err);
-    })
+    try {
+      const res = await fetch("http://localhost:5000/partners", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        toast.success("Profile created successfully!");
+
+        // Reset form
+        setFormData({
+          name: "",
+          profileimage: "",
+          subject: "",
+          studyMode: "Online",
+          availability: "",
+          location: "",
+          experienceLevel: "Beginner",
+          rating: 0,
+          partnerCount: 0,
+          email: user?.email || "",
+        });
+
+        // Navigate to find partners page
+        navigate("/find-partners");
+      } else {
+        toast.error("Failed to create profile!");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Server error!");
+    }
   };
 
   return (
@@ -84,24 +71,21 @@ const CreatePartnerProfile = () => {
         <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-6">
           Create Your Study Partner Profile
         </h1>
-
         <p className="text-center text-gray-600 mb-8">
           Fill out your details so other students can find and connect with you.
         </p>
 
         <div className="p-6 bg-indigo-50 rounded-lg border border-indigo-200">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* Full Name */}
+            {/* Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Full Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Full Name</label>
               <input
                 type="text"
                 name="name"
-                required
                 value={formData.name}
                 onChange={handleChange}
+                required
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Enter your full name"
               />
@@ -109,15 +93,13 @@ const CreatePartnerProfile = () => {
 
             {/* Profile Image */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Profile Image URL
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Profile Image URL</label>
               <input
                 type="text"
-                name="image"
-                required
-                value={formData.image}
+                name="profileimage"
+                value={formData.profileimage}
                 onChange={handleChange}
+                required
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Paste your profile image URL"
               />
@@ -125,15 +107,13 @@ const CreatePartnerProfile = () => {
 
             {/* Subject */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Subject
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Subject</label>
               <input
                 type="text"
                 name="subject"
-                required
                 value={formData.subject}
                 onChange={handleChange}
+                required
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="e.g., Math, English, Programming"
               />
@@ -141,9 +121,7 @@ const CreatePartnerProfile = () => {
 
             {/* Study Mode */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Study Mode
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Study Mode</label>
               <select
                 name="studyMode"
                 value={formData.studyMode}
@@ -157,15 +135,13 @@ const CreatePartnerProfile = () => {
 
             {/* Availability */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Availability Time
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Availability Time</label>
               <input
                 type="text"
                 name="availability"
-                required
                 value={formData.availability}
                 onChange={handleChange}
+                required
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="e.g., Evening 6–9 PM"
               />
@@ -173,15 +149,13 @@ const CreatePartnerProfile = () => {
 
             {/* Location */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Location
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Location</label>
               <input
                 type="text"
                 name="location"
-                required
                 value={formData.location}
                 onChange={handleChange}
+                required
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="City / Area / Preferred location"
               />
@@ -189,9 +163,7 @@ const CreatePartnerProfile = () => {
 
             {/* Experience Level */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Experience Level
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Experience Level</label>
               <select
                 name="experienceLevel"
                 value={formData.experienceLevel}
@@ -204,11 +176,9 @@ const CreatePartnerProfile = () => {
               </select>
             </div>
 
-            {/* Email (read only) */}
+            {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Your Email (Read Only)
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Your Email (Read Only)</label>
               <input
                 type="email"
                 name="email"
@@ -217,10 +187,6 @@ const CreatePartnerProfile = () => {
                 className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
               />
             </div>
-
-            {/* Hidden default fields */}
-            <input type="hidden" name="rating" value={formData.rating} />
-            <input type="hidden" name="partnerCount" value={formData.partnerCount} />
 
             {/* Submit Button */}
             <button
@@ -231,10 +197,6 @@ const CreatePartnerProfile = () => {
             </button>
           </form>
         </div>
-
-        <p className="mt-6 text-center text-sm text-gray-500">
-          Only logged-in users can create a partner profile.
-        </p>
       </div>
     </div>
   );
