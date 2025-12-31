@@ -1,16 +1,41 @@
-# React + Vite
+# 📚 Studymate – Study Management Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🔍 Project Overview
+Studymate is a web-based study management platform designed to help students organize their learning activities efficiently.  
+Users can manage study materials, track progress, and access resources through a clean and user-friendly interface.
 
-Currently, two official plugins are available:
+## 🌐 Live Website
+https://tangerine-scone-de3b97.netlify.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Technologies Used
+- HTML  
+- CSS  
+- JavaScript  
+- React  
+- Firebase  
 
-## React Compiler
+## ✨ Core Features
+- User authentication (Firebase)  
+- Study resource management  
+- Progress tracking system  
+- Fully responsive design  
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📦 Dependencies
+- React Router  
+- Firebase Authentication  
+- Axios  
 
-## Expanding the ESLint configuration
+## 🖼️ Project Screenshot
+![Studymate Screenshot](https://i.ibb.co.com/B5ZLQpj4/Screenshot-2026-01-01-022453.png)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ⚙️ How to Run This Project Locally
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/sadmankabir444/studymate
+
+Step 2: Install Dependencies
+npm install
+
+Step 3: Run the Project
+npm run dev
