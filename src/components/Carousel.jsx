@@ -7,34 +7,39 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-// Slides data (StudyMate theme)
 const slides = [
   {
     id: 1,
     title: "Connect with Study Partners Globally 🌍",
-    subtitle: "Find peers with matching subjects and skills to collaborate on projects and exams.",
-    image: "https://learningmole.com/wp-content/uploads/2024/09/image-216.jpeg",
-    buttonColor: "bg-indigo-600",
+    subtitle:
+      "Find peers with matching subjects and skills to collaborate on projects and exams.",
+    image:
+      "https://learningmole.com/wp-content/uploads/2024/09/image-216.jpeg",
+    buttonColor: "#4F46E5",
   },
   {
     id: 2,
     title: "Achieve Your Best Ratings Together 🏆",
-    subtitle: "Work with highly-rated partners and boost your collective academic performance.",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxhJ3vrVZed_P6pw5W1qG6VD2u-Nfo6aNXvQ&s",
-    buttonColor: "bg-teal-600",
+    subtitle:
+      "Work with highly-rated partners and boost your collective academic performance.",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxhJ3vrVZed_P6pw5W1qG6VD2u-Nfo6aNXvQ&s",
+    buttonColor: "#14B8A6",
   },
   {
     id: 3,
     title: "Seamless Collaboration Anytime, Anywhere 📚",
-    subtitle: "Organize sessions, share resources, and track your progress easily with StudyMate.",
-    image: "https://learningmole.com/wp-content/uploads/2024/08/image-146.jpeg",
-    buttonColor: "bg-purple-600",
+    subtitle:
+      "Organize sessions, share resources, and track your progress easily with StudyMate.",
+    image:
+      "https://learningmole.com/wp-content/uploads/2024/08/image-146.jpeg",
+    buttonColor: "#8B5CF6",
   },
 ];
 
 const Carousel = () => {
   return (
-    <section className="relative w-full h-[85vh] md:h-[90vh] overflow-hidden bg-gradient-to-b from-indigo-50 via-white to-indigo-50">
+    <section className="relative w-full h-[75vh] md:h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-indigo-50 via-white to-indigo-50">
       <Swiper
         spaceBetween={30}
         centeredSlides
@@ -46,17 +51,16 @@ const Carousel = () => {
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className="flex flex-col md:flex-row justify-between items-center h-full px-6 md:px-16 lg:px-24 gap-10">
-              
+            <div className="flex flex-col md:flex-row justify-center md:justify-between items-center h-full px-6 md:px-16 lg:px-24 gap-10">
               {/* Text Content */}
               <motion.div
-                className="flex-1 text-center md:text-left space-y-4"
+                className="flex-1 text-center md:text-left space-y-5"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
               >
                 <motion.h1
-                  className="text-4xl md:text-5xl font-bold text-indigo-800 leading-tight"
+                  className="text-4xl md:text-5xl font-extrabold text-indigo-800 leading-tight drop-shadow-lg"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.8 }}
@@ -64,7 +68,7 @@ const Carousel = () => {
                   {slide.title}
                 </motion.h1>
                 <motion.p
-                  className="text-gray-700 text-lg md:text-xl max-w-md"
+                  className="text-gray-700 text-lg md:text-xl max-w-md mx-auto md:mx-0"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.8 }}
@@ -74,7 +78,8 @@ const Carousel = () => {
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`mt-4 px-8 py-3 ${slide.buttonColor} text-white rounded-full shadow-lg hover:opacity-90 transition`}
+                  style={{ backgroundColor: slide.buttonColor }}
+                  className="mt-4 px-8 py-3 text-white rounded-full shadow-lg transition duration-300"
                 >
                   Get Started
                 </motion.button>
@@ -82,7 +87,7 @@ const Carousel = () => {
 
               {/* Image */}
               <motion.div
-                className="flex-1 flex justify-center md:justify-end"
+                className="flex-1 flex justify-center md:justify-end items-center"
                 initial={{ opacity: 0, y: 60 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, ease: "easeOut" }}
@@ -90,24 +95,26 @@ const Carousel = () => {
                 <motion.img
                   src={slide.image}
                   alt={slide.title}
-                  className="w-64 h-80 object-cover rounded-2xl md:w-96 lg:w-[430px] drop-shadow-xl"
+                  className="w-64 h-80 md:w-96 lg:w-[450px] object-cover rounded-3xl shadow-2xl"
                   whileHover={{ scale: 1.05, y: -5 }}
                   transition={{ duration: 0.5 }}
                 />
               </motion.div>
-
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
 
-      {/* Overlay gradient shimmer */}
+      {/* Scroll Down Arrow */}
       <motion.div
-        className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-indigo-200/50 to-transparent"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 w-6 h-6 border-l-2 border-b-2 border-indigo-500 rotate-45 animate-bounce"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+        transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
       />
+
+      {/* Bottom Soft Gradient */}
+      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-indigo-200/50 to-transparent pointer-events-none" />
     </section>
   );
 };

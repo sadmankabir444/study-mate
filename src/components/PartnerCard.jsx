@@ -11,14 +11,13 @@ const PartnerCard = ({ partner }) => {
     if (user) {
       navigate(`/partner/${partner._id}`);
     } else {
-      toast("Please login to view profile details!");
-      // pass object to ensure LoginPage can read pathname
-      navigate("/login", { state: { from: { pathname: `/partner/${partner._id}` } } });
+      toast.info("Please login to view profile details!");
+      navigate("/login", { state: { from: `/partner/${partner._id}` } });
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 p-6 cursor-pointer hover:bg-gradient-to-br hover:from-indigo-50 hover:to-white">
+    <div className="bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 p-6 cursor-pointer hover:bg-gradient-to-br hover:from-indigo-50 hover:to-white h-full flex flex-col">
       <div className="flex justify-center">
         <img
           src={partner.profileimage}
@@ -30,11 +29,9 @@ const PartnerCard = ({ partner }) => {
       <h3 className="text-xl font-semibold text-gray-900 text-center mt-4">{partner.name}</h3>
       <p className="text-center text-indigo-600 font-medium mt-1">{partner.subject}</p>
 
-      <div className="mt-3 text-gray-700 text-sm text-center">
-        Study Mode: <span className="font-semibold text-gray-900">{partner.studyMode}</span>
-      </div>
-      <div className="mt-1 text-gray-700 text-sm text-center">
-        Experience: <span className="font-semibold text-gray-900">{partner.experienceLevel}</span>
+      <div className="mt-3 text-gray-700 text-sm text-center flex-1">
+        <p>Study Mode: <span className="font-semibold text-gray-900">{partner.studyMode}</span></p>
+        <p className="mt-1">Experience: <span className="font-semibold text-gray-900">{partner.experienceLevel}</span></p>
       </div>
 
       <button

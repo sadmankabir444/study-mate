@@ -13,6 +13,14 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import PartnerDetailsPage from "./pages/PartnerDetailsPage";
 import { useAuth } from "./provider/AuthProvider";
 import MyConnectionsPage from "./pages/MyConnectionsPage";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
+import BlogPage from "./pages/BlogPage";
+import NotFoundPage from "./pages/NotFoundPage";
+
+// Dashboard pages
+import DashboardLayout from "./pages/dashboard/DashboardLayout";
+import DashboardHome from "./pages/dashboard/DashboardHome";
 
 const API_BASE = "https://study-mate-seven-blond.vercel.app";
 
@@ -42,7 +50,8 @@ function App() {
               Something went wrong 😢
             </h1>
             <p className="mt-2 text-gray-600">
-              Failed to load data from server. Please make sure backend is running.
+              Failed to load data from server. Please make sure backend is
+              running.
             </p>
           </div>
         </div>
@@ -50,15 +59,14 @@ function App() {
       children: [
         { index: true, element: <Home /> },
 
+        // Find Partners Page (public)
         {
           path: "find-partners",
           element: <FindPartners />,
           loader: async () => {
             try {
               const res = await fetch(`${API_BASE}/partners`);
-              if (!res.ok) {
-                return [];
-              }
+              if (!res.ok) return [];
               return res.json();
             } catch (err) {
               return [];
@@ -66,12 +74,17 @@ function App() {
           },
         },
 
+        // Auth Pages
         { path: "login", element: <LoginPage /> },
         { path: "register", element: <RegisterPage /> },
         { path: "forgot-password", element: <ForgotPasswordPage /> },
+
+        // User Profile Pages
         { path: "profile", element: <Profile /> },
         { path: "create-partner-profile", element: <CreatePartnerProfile /> },
+        { path: "my-connections", element: <MyConnectionsPage /> },
 
+        // Partner Details
         {
           path: "partner/:id",
           element: <PartnerDetailsPage />,
@@ -86,12 +99,27 @@ function App() {
           },
         },
 
+        // -----------------------
+        // Dashboard Nested Routes
         {
-          path: "my-connections",
-          element: <MyConnectionsPage />,
+          path: "dashboard",
+          element: <DashboardLayout />,
+          children: [
+            { index: true, element: <DashboardHome /> },
+            { path: "create-profile", element: <CreatePartnerProfile /> },
+            { path: "connections", element: <MyConnectionsPage /> },
+          ],
         },
 
-        { path: "*", element: <div className="p-10 text-center text-xl">404 – Page Not Found</div> },
+        {
+          path: "about",
+          element: <AboutPage />,
+        },
+        { path: "contact", element: <ContactPage /> },
+        { path: "blog", element: <BlogPage /> },
+
+        // 404
+        { path: "*", element: <NotFoundPage /> },
       ],
     },
   ]);
